@@ -6,9 +6,10 @@ import { useState } from "react";
 // import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 // import Rating from "react-rating";
 import Swal from "sweetalert2";
-const UserDetails = ({ user }) => {
-  const { first_name, last_name, email, gender, avatar, domain, available } =
-    user;
+const UserDetails = ({ user, onSelect, isSelected }) => {
+  
+const { id, first_name, last_name, email, gender, avatar, domain, available } =
+  user;
   // const available = user?.available => true: 'available' : "not available"
   const BookNow = () => {
     const Toast = Swal.mixin({
@@ -25,7 +26,7 @@ const UserDetails = ({ user }) => {
 
     Toast.fire({
       icon: "success",
-      title: "Bookmark successfully",
+      title: "Select successfully",
     });
   };
   const [isHovered, setIsHovered] = useState(false);
@@ -59,12 +60,26 @@ const UserDetails = ({ user }) => {
       </p>
 
       <div className="flex items-center gap-5 space-y-2"></div>
-      <button
+      {/* <button
         onClick={BookNow}
         id="spotify"
         className="bg-white transform hover:-translate-y-3 mt-3 border-2 h-10 rounded-md w-full duration-500 text-green-500 border-green-500 hover:bg-green-500 hover:text-white text-xl"
       >
         Select
+      </button> */}
+      <button
+        onClick={() => {
+          onSelect(id);
+          BookNow(); // You can decide where to call BookNow based on your requirements
+        }}
+        id="spotify"
+        className={`bg-white transform hover:-translate-y-3 mt-3 border-2 h-10 rounded-md w-full duration-500 ${
+          isSelected
+            ? "text-white bg-green-500"
+            : "text-green-500 border-green-500 hover:bg-green-500 hover:text-white"
+        } text-xl`}
+      >
+        {isSelected ? "Selected" : "Select"}
       </button>
     </div>
   );

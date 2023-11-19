@@ -20,56 +20,55 @@ const Register = () => {
     watch,
     reset,
   } = useForm();
-const onSubmit = (data) => {
-  createUser(data.email, data.password).then((result) => {
-    const loggedUser = result.user;
-    console.log(loggedUser);
+  const onSubmit = (data) => {
+    createUser(data.email, data.password).then((result) => {
+      const loggedUser = result.user;
+      console.log(loggedUser);
 
-    // Extract relevant fields for updateUserProfile
-    const { name, photoURL } = data;
+      // Extract relevant fields for updateUserProfile
+      const { name, photoURL } = data;
 
-    updateUserProfile(name, photoURL)
-      .then(() => {
-        // Prepare data for MongoDB
-        const saveUser = {
-          first_name: data.first_name,
-          last_name: data.last_name,
-          avatar: data.avatar,
-          domain: data.domain,
-          email: data.email,
-          gender: data.gender,
-          available: data.available,
-          password: data.password,
-        };
+      updateUserProfile(name, photoURL)
+        .then(() => {
+          // Prepare data for MongoDB
+          const saveUser = {
+            first_name: data.first_name,
+            last_name: data.last_name,
+            avatar: data.avatar,
+            domain: data.domain,
+            email: data.email,
+            gender: data.gender,
+            available: data.available,
+            password: data.password,
+          };
 
-        // Save data to MongoDB
-        fetch("http://localhost:5000/users", {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify(saveUser),
+          // Save data to MongoDB
+          fetch("http://localhost:5000/users", {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+            },
+            body: JSON.stringify(saveUser),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.insertedId) {
+                console.log(data);
+                reset();
+                Swal.fire({
+                  position: "top-end",
+                  icon: "success",
+                  title: "User created successfully.",
+                  showConfirmButton: false,
+                  timer: 1500,
+                });
+                navigate("/");
+              }
+            });
         })
-          .then((res) => res.json())
-          .then((data) => {
-            if (data.insertedId) {
-              console.log(data);
-              reset();
-              Swal.fire({
-                position: "top-end",
-                icon: "success",
-                title: "User created successfully.",
-                showConfirmButton: false,
-                timer: 1500,
-              });
-              navigate("/");
-            }
-          });
-      })
-      .catch((error) => console.log(error));
-  });
-};
-
+        .catch((error) => console.log(error));
+    });
+  };
 
   // const onSubmit = (data) => {
   //   console.log(data)

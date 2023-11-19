@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
-// import ProductDetails from "./ProductDetails";
 import UserDetails from "./UserDetails";
+// import Swal from "sweetalert2";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchName, setSearchName] = useState("");
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [teamName, setTeamName] = useState("");
+
   const [selectedFilters, setSelectedFilters] = useState({
     domain: "",
     gender: "",
@@ -50,46 +53,101 @@ const Users = () => {
     setSearchName(event.target.value);
   };
 
-const handleFilterChange = (filterType, value) => {
-  setSelectedFilters((prevFilters) => ({
-    ...prevFilters,
-    [filterType]: value,
-  }));
-};
+  const handleFilterChange = (filterType, value) => {
+    setSelectedFilters((prevFilters) => ({
+      ...prevFilters,
+      [filterType]: value,
+    }));
+  };
 
+  const handleUserSelection = (userId) => {
+    setSelectedUsers((prevSelectedUsers) =>
+      prevSelectedUsers.includes(userId)
+        ? prevSelectedUsers.filter((id) => id !== userId)
+        : [...prevSelectedUsers, userId]
+    );
+  };
 
-  
+  const createTeam = async () => {
+    try {
+      if (!teamName) {
+        console.error("Team name is required.");
+        return;
+      }
+
+      if (selectedUsers.length === 0) {
+        console.error("Select at least one user to create a team.");
+        return;
+      }
+
+      const response = await fetch("http://localhost:5000/team", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          teamName,
+          users: selectedUsers,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      setSelectedUsers([]);
+      setTeamName("");
+      console.log("Team created successfully!");
+    } catch (error) {
+      console.error("Error creating team:", error);
+    }
+  };
+
   return (
     <div className="lg:px-14">
       <h1 className="text-center font-bold text-4xl my-3">All Users</h1>
-      <div className="flex justify-center mt-4">
+
+      <div className="md:flex justify-center mt-4 lg:px-0 px-3">
         <input
           type="text"
           placeholder="Search by Name"
           value={searchName}
           onChange={handleSearchChange}
-          className="mr-2 px-4 py-2 bg-gray-200 border-2 border-orange-500 rounded-md"
+          className="mr-2 px-3 py-2 w-full md:w-40 bg-gray-200 border-2 border-green-500 rounded-md"
         />
+        <input
+          type="text"
+          placeholder="Team Name"
+          value={teamName}
+          onChange={(e) => setTeamName(e.target.value)}
+          className="mr-2 px-3 py-2 md:w-40 w-full bg-gray-200 border-2 border-orange-500 rounded-md"
+        />
+        <button
+          className="bg-sky-300 w-full md:w-32 py-2 px-3 rounded-md"
+          onClick={createTeam}
+        >
+          Create Team
+        </button>
       </div>
 
-      <div className="flex justify-center mt-4">
-        <select
-          value={selectedFilters.domain}
-          onChange={(e) => handleFilterChange("domain", e.target.value)}
-          className="mr-2 px-4 py-2 bg-gray-300 text-gray-600 rounded-md"
-        >
-          <option value="">Domain</option>
-          <option value="Developer">Developer</option>
-          <option value="IT">IT</option>
-          <option value="Finance">Finance</option>
-          <option value="Marketing">Marketing</option>
-          <option value="Management">Management</option>
-          <option value="UI Designing">UI Designing</option>
-          <option value="Sales">Sales</option>
-          <option value="Business Development">Business Development</option>
-          {/* Add more options as needed */}
-        </select>
 
+      <div className="flex justify-center mt-4">
+      <select
+        value={selectedFilters.domain}
+        onChange={(e) => handleFilterChange("domain", e.target.value)}
+        className="mr-2 px-4 py-2 bg-gray-300 text-gray-600 rounded-md"
+      >
+        <option value="">Domain</option>
+        <option value="Developer">Developer</option>
+        <option value="IT">IT</option>
+        <option value="Finance">Finance</option>
+        <option value="Marketing">Marketing</option>
+        <option value="Management">Management</option>
+        <option value="UI Designing">UI Designing</option>
+        <option value="Sales">Sales</option>
+        <option value="Business Development"> Development</option>
+        {/* Add more options as needed */}
+      </select>
         <select
           value={selectedFilters.gender}
           onChange={(e) => handleFilterChange("gender", e.target.value)}
@@ -112,10 +170,16 @@ const handleFilterChange = (filterType, value) => {
           <option value="false">Not Available</option>
         </select>
       </div>
+      {/* Add a team name input */}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {users.map((user) => (
-          <UserDetails key={user.id} user={user} />
+          <UserDetails
+            key={user.id}
+            user={user}
+            onSelect={() => handleUserSelection(user.id)}
+            isSelected={selectedUsers.includes(user.id)}
+          />
         ))}
       </div>
       <div className="flex justify-center mt-4">

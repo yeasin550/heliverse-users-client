@@ -1,9 +1,6 @@
 import { Link } from "react-router-dom";
-// import logo from "../../assets/logo.png";
-// import './NavBar.css';
 import { useContext } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
-// import { AuthContext } from "../../AuthProvider/AuthProvider";
 const NavBar = () => {
   const { logOut, user } = useContext(AuthContext);
   const handleLogout = () => {
@@ -20,7 +17,6 @@ const NavBar = () => {
       <Link to="/services">Services</Link>
       <Link to="/about">About</Link>
       <Link to="/contact">Contact</Link>
-
     </>
   );
 
@@ -81,7 +77,10 @@ const NavBar = () => {
                     className=" btn btn-ghost btn-circle avatar flex-row-reverse"
                   >
                     <div className="w-12 rounded-full">
-                      <img src="https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg" />
+                      <img
+                        src="https://img.freepik.com/free-photo/close-up-portrait-young-man-isolated-black-wall-real-emotions-male-model-smiling-feeling-happy-facial-expression-pure-clear-human-emotions-concept_155003-28037.jpg?w=740&t=st=1700361136~exp=1700361736~hmac=553a8b6ddd2d2bbd082a533d5f3eff889f189b592c6a9e0dd909f8dcdad29cdd"
+                        alt="User Avatar"
+                      />
                     </div>
                   </label>
                 </div>
@@ -95,7 +94,10 @@ const NavBar = () => {
                 </ul>
               </>
             ) : (
-              <Link to="/login" className="custom-btn rounded-md bg-green-400 py-2 px-3 text-lg">
+              <Link
+                to="/login"
+                className="custom-btn rounded-md bg-green-400 py-2 px-3 text-lg"
+              >
                 Login Now
               </Link>
             )}
