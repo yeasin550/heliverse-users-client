@@ -43,7 +43,7 @@ const Register = () => {
           };
 
           // Save data to MongoDB
-          fetch("http://localhost:5000/users", {
+          fetch("https://heliverse-users-server.vercel.app/users", {
             method: "POST",
             headers: {
               "content-type": "application/json",
@@ -84,7 +84,7 @@ const Register = () => {
 
   //           profile: data.photoURL,
   //         };
-  //         fetch("http://localhost:5000/users", {
+  //         fetch("https://heliverse-users-server.vercel.app/users", {
   //           method: "POST",
   //           headers: {
   //             "content-type": "application/json",

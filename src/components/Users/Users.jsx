@@ -24,7 +24,7 @@ const Users = () => {
           .join("&");
 
         const response = await fetch(
-          `http://localhost:5000/users?page=${currentPage}&searchName=${searchName}&${filters}`
+          `https://heliverse-users-server.vercel.app/users?page=${currentPage}&searchName=${searchName}&${filters}`
         );
 
         if (!response.ok) {
@@ -80,16 +80,19 @@ const Users = () => {
         return;
       }
 
-      const response = await fetch("http://localhost:5000/team", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          teamName,
-          users: selectedUsers,
-        }),
-      });
+      const response = await fetch(
+        "https://heliverse-users-server.vercel.app/team",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            teamName,
+            users: selectedUsers,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -130,24 +133,23 @@ const Users = () => {
         </button>
       </div>
 
-
       <div className="flex justify-center mt-4">
-      <select
-        value={selectedFilters.domain}
-        onChange={(e) => handleFilterChange("domain", e.target.value)}
-        className="mr-2 px-4 py-2 bg-gray-300 text-gray-600 rounded-md"
-      >
-        <option value="">Domain</option>
-        <option value="Developer">Developer</option>
-        <option value="IT">IT</option>
-        <option value="Finance">Finance</option>
-        <option value="Marketing">Marketing</option>
-        <option value="Management">Management</option>
-        <option value="UI Designing">UI Designing</option>
-        <option value="Sales">Sales</option>
-        <option value="Business Development"> Development</option>
-        {/* Add more options as needed */}
-      </select>
+        <select
+          value={selectedFilters.domain}
+          onChange={(e) => handleFilterChange("domain", e.target.value)}
+          className="mr-2 px-4 py-2 bg-gray-300 text-gray-600 rounded-md"
+        >
+          <option value="">Domain</option>
+          <option value="Developer">Developer</option>
+          <option value="IT">IT</option>
+          <option value="Finance">Finance</option>
+          <option value="Marketing">Marketing</option>
+          <option value="Management">Management</option>
+          <option value="UI Designing">UI Designing</option>
+          <option value="Sales">Sales</option>
+          <option value="Business Development"> Development</option>
+          {/* Add more options as needed */}
+        </select>
         <select
           value={selectedFilters.gender}
           onChange={(e) => handleFilterChange("gender", e.target.value)}
